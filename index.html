@@ -117,10 +117,10 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
   </div>
 </div>
 <div class="nt">
-  <div class="nb a" onclick="PG('home')">🏠 Beranda</div>
-  <div class="nb" onclick="PG('bangfas')">Bangfas</div>
-  <div class="nb" onclick="PG('harbang')">Harbang</div>
-  <div class="nb" onclick="PG('export')">☁️ Drive</div>
+  <div class="nb a" onclick="PG('home');return false;">🏠 Beranda</div>
+  <div class="nb" onclick="PG('bangfas');return false;">Bangfas</div>
+  <div class="nb" onclick="PG('harbang');return false;">Harbang</div>
+  <div class="nb" onclick="PG('export');return false;">☁️ Drive</div>
 </div>
 
 <!-- ════ HOME ════ -->
@@ -148,14 +148,14 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(
     </div>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-    <div class="cd" style="cursor:pointer" onclick="PG('bangfas')">
+    <div class="cd" style="cursor:pointer" onclick="PG('bangfas');return false;">
       <div style="padding:16px;text-align:center">
         <div style="font-size:30px;margin-bottom:7px">🏗️</div>
         <div style="font-size:15px;font-weight:800;color:var(--g)">BANGFAS</div>
         <div style="font-size:10px;color:var(--mu);margin-top:3px">Lahan · GPS · Utilitas</div>
       </div>
     </div>
-    <div class="cd" style="cursor:pointer" onclick="PG('harbang')">
+    <div class="cd" style="cursor:pointer" onclick="PG('harbang');return false;">
       <div style="padding:16px;text-align:center">
         <div style="font-size:30px;margin-bottom:7px">🏠</div>
         <div style="font-size:15px;font-weight:800;color:#5d4037">HARBANG</div>
@@ -747,6 +747,20 @@ document.getElementById('hb-tgl').value=new Date().toISOString().split('T')[0];
 document.getElementById('bf-mi').addEventListener('change',function(){AM('bf',this);});
 addLog('SIPEDAS siap · Drive: renkonzidamxiiimerdeka@gmail.com');
 renderKL();renderRL();
+
+// Mobile touch fix
+document.querySelectorAll('.nb').forEach(btn => {
+  btn.addEventListener('touchend', function(e) {
+    e.preventDefault();
+    const onclick = this.getAttribute('onclick');
+    if(onclick) eval(onclick);
+  });
+});
+// Make sure first page is visible
+document.addEventListener('DOMContentLoaded', function() {
+  PG('home');
+});
+
 </script>
 </body>
 </html>

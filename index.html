@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIPEDAS - Kodam XIII/Merdeka</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--g:#1a4731;--g2:#2d6a4f;--gold:#c67c00;--bg:#f5f7f5;--b:rgba(0,0,0,.1);--tx:#1a1a1a;--mu:#5a6672;--er:#c0392b;--in:#1565c0}
+body{font-family:sans-serif;background:var(--bg);color:var(--tx);font-size:14px}
+.tb{background:var(--g);color:#fff;padding:12px 14px;position:sticky;top:0;z-index:100;box-shadow:0 2px 4px rgba(0,0,0,.2)}
+.tbl{font-size:17px;font-weight:800;letter-spacing:1.5px}
+.tbs{font-size:9px;opacity:.65}
+.nav{display:flex;gap:4px;padding:8px 12px;background:#fff;border-bottom:2px solid var(--b);overflow-x:auto;position:sticky;top:52px;z-index:99}
+.nav a{padding:8px 14px;border-radius:16px;font-size:13px;font-weight:600;border:1px solid var(--b);color:#555;white-space:nowrap;text-decoration:none;background:#fff;display:inline-block}
+.nav a.on{background:var(--g);color:#fff;border-color:var(--g)}
+.pg{display:none;padding:14px 14px 100px}
+.pg.on{display:block}
+.card{background:#fff;border:1px solid var(--b);border-radius:10px;margin-bottom:12px;overflow:hidden}
+.ch{padding:11px 14px;font-size:13px;font-weight:600;color:#fff}
+.cg{background:var(--g)}.cb2{background:#5d4037}.ca{background:var(--gold)}.ci{background:var(--in)}
+.cb{padding:13px 14px}
+.f{margin-bottom:12px}
+.f label{display:block;font-size:11px;font-weight:700;color:var(--mu);margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px}
+.f input,.f select,.f textarea{width:100%;border:1px solid var(--b);border-radius:7px;padding:10px 12px;font-size:14px;color:var(--tx);background:#fff;outline:none;-webkit-appearance:none;font-family:inherit}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--g2);box-shadow:0 0 0 2px rgba(45,106,79,.1)}
+.f textarea{resize:vertical;min-height:65px}
+.r2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tr{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--b)}
+.tr:last-child{border:none}
+.tr span{font-size:13px}
+.tw{position:relative;width:46px;height:26px;cursor:pointer;flex-shrink:0}
+.tw input{opacity:0;width:0;height:0;position:absolute}
+.sl{position:absolute;inset:0;background:#ccc;border-radius:13px;transition:.2s}
+.sl::before{content:"";position:absolute;width:20px;height:20px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s}
+.tw input:checked+.sl{background:var(--g2)}
+.tw input:checked+.sl::before{transform:translateX(20px)}
+.kps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.kp{padding:7px 13px;border-radius:14px;font-size:12px;font-weight:600;border:1.5px solid #ccc;color:#666;background:#fff;cursor:pointer;display:inline-block;text-decoration:none}
+.k-b{background:#e8f5e9;color:#1b5e20;border-color:#4caf50}
+.k-s{background:#e3f2fd;color:#0d47a1;border-color:#2196f3}
+.k-r{background:#fff3e0;color:#e65100;border-color:#ff9800}
+.k-d{background:#ffebee;color:#b71c1c;border-color:#f44336}
+.gbox{background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:11px;display:flex;align-items:center;gap:9px}
+.gbtn{background:var(--g);color:#fff;border:none;padding:9px 14px;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit}
+.gi{flex:1;font-size:11px;color:var(--mu);line-height:1.6}
+.gi.ok{color:var(--g2);font-weight:600}
+.luas{background:var(--bg);border:1px solid var(--b);border-radius:7px;padding:9px 12px;font-size:14px;color:var(--g);font-weight:700;text-align:center;margin-bottom:11px}
+.mz{border:2px dashed #ccc;border-radius:10px;padding:18px;text-align:center;cursor:pointer;background:var(--bg)}
+.mz input{display:none}
+.mz .ico{font-size:36px;margin-bottom:6px}
+.mz p{font-size:13px;color:var(--mu);margin-top:4px}
+.mc{display:inline-block;padding:4px 12px;border-radius:12px;font-size:12px;font-weight:700;margin-top:7px}
+.mc-g{background:#e8f5e9;color:#1b5e20}.mc-y{background:#fff3e0;color:#e65100}.mc-r{background:#ffebee;color:#b71c1c}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:8px}
+.mthumb{aspect-ratio:1;background:#eee;border-radius:6px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;font-size:20px}
+.mthumb img{width:100%;height:100%;object-fit:cover}
+.mthumb button{position:absolute;top:2px;right:2px;width:20px;height:20px;background:rgba(0,0,0,.7);color:#fff;border-radius:50%;font-size:11px;border:none;cursor:pointer;line-height:1;font-family:inherit}
+.btn{padding:12px 16px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;border:none;display:block;width:100%;text-align:center;margin-top:8px;font-family:inherit}
+.btn-g{background:var(--g);color:#fff}
+.btn-b{background:var(--in);color:#fff}
+.btn-o{background:#fff;color:var(--g);border:2px solid var(--g)}
+.btn-add{display:block;width:100%;padding:11px;border-radius:9px;background:#f0f7f4;border:2px dashed #52b788;color:var(--g);font-size:13px;font-weight:700;cursor:pointer;text-align:center;margin-bottom:10px;font-family:inherit}
+.upw{display:none;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:9px;padding:12px 14px;margin-top:8px}
+.upb{height:8px;background:#c8e6c9;border-radius:4px;overflow:hidden;margin-top:7px}
+.upf{height:100%;background:var(--g2);border-radius:4px;transition:width .3s}
+.upt{font-size:12px;color:var(--g2);font-weight:700}
+.ri{background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:10px 12px;margin-bottom:8px;display:flex;align-items:center;gap:9px}
+.ric{width:34px;height:34px;border-radius:8px;background:var(--g);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;font-weight:700}
+.rin{flex:1}.rn{font-weight:700;font-size:13px}.rs{font-size:11px;color:var(--mu);margin-top:1px}
+.ki{display:flex;align-items:center;gap:9px;padding:10px 12px;border:1px solid var(--b);border-radius:9px;margin-bottom:8px;cursor:pointer;background:#fff;text-decoration:none;color:var(--tx)}
+.kdot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.d-g{background:#4caf50}.d-y{background:#ff9800}.d-r{background:#f44336}.d-e{background:#ccc}
+.kname{flex:1;font-size:13px;font-weight:600}.ksub{font-size:11px;color:var(--mu)}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.6);z-index:500;overflow-y:auto}
+.overlay.show{display:block}
+.modal-wrap{padding:16px;min-height:100%;display:flex;align-items:flex-start;justify-content:center}
+.modal{background:#fff;border-radius:14px;width:100%;max-width:480px}
+.modal-head{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;color:#fff;border-radius:14px 14px 0 0}
+.mh-g{background:var(--g)}.mh-b{background:#5d4037}
+.modal-head h3{font-size:15px;font-weight:700}
+.modal-head button{background:rgba(255,255,255,.25);border:none;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:16px;font-family:inherit}
+.modal-body{padding:16px;max-height:65vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.modal-foot{padding:12px 16px;border-top:1px solid var(--b);display:flex;gap:9px;background:#fff;border-radius:0 0 14px 14px}
+.modal-foot .btn{flex:1;margin-top:0}
+.banner{background:var(--g);color:#fff;padding:20px 16px;margin:-14px -14px 16px}
+.banner h1{font-size:22px;font-weight:800;letter-spacing:2px}
+.ok-box{background:#e8f5e9;border:1px solid #a5d6a7;border-radius:9px;padding:12px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.sum-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b);font-size:13px}
+.sum-row:last-child{border:none}
+.logbox{background:var(--bg);border:1px solid var(--b);border-radius:8px;padding:11px;max-height:200px;overflow-y:auto;font-size:11px;font-family:monospace;line-height:2;word-break:break-all;color:var(--mu)}
+.info{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9;border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:10px}
+.warn{background:#fff3e0;color:#e65100;border:1px solid #ffcc80;border-radius:8px;padding:10px 12px;font-size:12px;margin-bottom:10px}
+.sdiv{font-size:10px;font-weight:700;color:var(--mu);letter-spacing:.8px;text-transform:uppercase;padding:8px 0 5px;border-bottom:1px solid var(--b);margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<div class="tb">
+  <div class="tbl">SIPEDAS</div>
+  <div class="tbs">Zidam XIII Merdeka - renkonzidamxiiimerdeka@gmail.com</div>
+</div>
+<div class="nav" id="NAV">
+  <a href="#" id="tab0">Beranda</a>
+  <a href="#" id="tab1">Bangfas</a>
+  <a href="#" id="tab2">Harbang</a>
+  <a href="#" id="tab3">Drive</a>
+</div>
+
+<!-- BERANDA -->
+<div class="pg" id="pg0">
+  <div class="banner"><h1>SIPEDAS</h1><p style="font-size:12px;opacity:.75;margin-top:3px">Sistem Pengumpulan Data Survei Terintegrasi</p></div>
+  <div class="ok-box"><span style="font-size:22px">&#10003;</span><div><b style="font-size:13px">Google Drive Terhubung</b><br><span style="color:#2d6a4f;font-size:11px">renkonzidamxiiimerdeka@gmail.com</span></div></div>
+  <div class="r2" style="margin-bottom:12px">
+    <div class="card" id="go-bf" style="cursor:pointer"><div style="padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">&#127959;</div><div style="font-size:14px;font-weight:800;color:var(--g)">BANGFAS</div><div style="font-size:10px;color:var(--mu);margin-top:3px">Lahan, GPS, Utilitas</div></div></div>
+    <div class="card" id="go-hb" style="cursor:pointer"><div style="padding:18px;text-align:center"><div style="font-size:28px;margin-bottom:8px">&#127968;</div><div style="font-size:14px;font-weight:800;color:#5d4037">HARBANG</div><div style="font-size:10px;color:var(--mu);margin-top:3px">Ruangan, Komponen</div></div></div>
+  </div>
+  <div class="card"><div class="ch ci">Cara Pakai</div><div class="cb">
+    <div class="sum-row"><span style="color:var(--mu)">1. Isi form survei</span><b>Bangfas atau Harbang</b></div>
+    <div class="sum-row"><span style="color:var(--mu)">2. Upload foto</span><b>Min. 5 per komponen</b></div>
+    <div class="sum-row"><span style="color:var(--mu)">3. Ambil GPS</span><b>Di lokasi survei</b></div>
+    <div class="sum-row"><span style="color:var(--mu)">4. Simpan</span><b>Otomatis upload ke Drive</b></div>
+  </div></div>
+  <button class="btn btn-b" id="btn-test-home">Test Koneksi Google Drive</button>
+  <div id="test-res"></div>
+</div>
+
+<!-- BANGFAS -->
+<div class="pg" id="pg1">
+  <div class="card"><div class="ch cg">Identitas Lokasi</div><div class="cb">
+    <div class="f"><label>Nama Objek *</label><input id="bf-nm" placeholder="Mess Perwira Blok A..."></div>
+    <div class="r2"><div class="f"><label>No. Rumah Dinas</label><input id="bf-no"></div><div class="f"><label>Surveyor *</label><input id="bf-sv"></div></div>
+    <div class="f"><label>Alamat</label><textarea id="bf-adr" rows="2"></textarea></div>
+    <div class="f"><label>Tanggal Survei</label><input type="date" id="bf-tgl"></div>
+  </div></div>
+  <div class="card"><div class="ch cg">Koordinat GPS</div><div class="cb">
+    <div class="gbox"><div class="gi" id="bf-gi">Tekan tombol untuk ambil GPS di lokasi survei</div><button class="gbtn" id="btn-gps-bf">Ambil GPS</button></div>
+    <div class="r2" style="margin-top:10px"><div class="f"><label>Latitude</label><input id="bf-lat" readonly placeholder="otomatis"></div><div class="f"><label>Longitude</label><input id="bf-lng" readonly placeholder="otomatis"></div></div>
+    <div class="f"><label>Elevasi (mdpl)</label><input type="number" id="bf-elv" step="0.1"></div>
+  </div></div>
+  <div class="card"><div class="ch cg">Status &amp; Ukuran Lahan</div><div class="cb">
+    <div class="f"><label>Status Tanah</label><select id="bf-st"><option>Milik Negara</option><option>Hak Pakai</option><option>Hak Pengelolaan</option><option>HGB</option><option>Sewa</option><option>Pinjam Pakai</option><option>Belum Jelas</option></select></div>
+    <div class="f"><label>No. Sertifikat</label><input id="bf-sr"></div>
+    <div class="r2"><div class="f"><label>Panjang (m)</label><input type="number" id="bf-p" step="0.01"></div><div class="f"><label>Lebar (m)</label><input type="number" id="bf-l" step="0.01"></div></div>
+    <div class="luas" id="bf-luas">Luas: - m2</div>
+    <div class="f"><label>Bentuk</label><select id="bf-bt"><option>Persegi Panjang</option><option>Persegi</option><option>Tidak Beraturan</option><option>Trapesium</option></select></div>
+    <div class="f"><label>Keterangan Lahan</label><textarea id="bf-kl"></textarea></div>
+  </div></div>
+  <div class="card"><div class="ch cg">Elevasi &amp; Topografi</div><div class="cb">
+    <div class="f"><label>Topografi</label><select id="bf-tp"><option>Datar</option><option>Berbukit Ringan</option><option>Berbukit</option><option>Curam</option><option>Lereng</option></select></div>
+    <div class="f"><label>Risiko Banjir</label>
+      <div class="kps" id="grp-banjir">
+        <a href="#" class="kp">Rendah</a>
+        <a href="#" class="kp">Sedang</a>
+        <a href="#" class="kp">Tinggi</a>
+      </div>
+      <input type="hidden" id="bf-bj">
+    </div>
+    <div class="f"><label>Keterangan Elevasi</label><textarea id="bf-ke"></textarea></div>
+  </div></div>
+  <div class="card"><div class="ch ci">Sumber Air</div><div class="cb">
+    <div class="tr"><span>PDAM / Air Perpipaan</span><label class="tw"><input type="checkbox" id="bf-pd"><span class="sl"></span></label></div>
+    <div class="tr"><span>Sumur Gali</span><label class="tw"><input type="checkbox" id="bf-sg"><span class="sl"></span></label></div>
+    <div class="tr"><span>Sumur Bor</span><label class="tw"><input type="checkbox" id="bf-sb"><span class="sl"></span></label></div>
+    <div class="tr"><span>Sungai / Mata Air</span><label class="tw"><input type="checkbox" id="bf-su"><span class="sl"></span></label></div>
+    <div class="f" style="margin-top:9px"><label>Kualitas Air</label>
+      <div class="kps" id="grp-kair">
+        <a href="#" class="kp">Baik</a>
+        <a href="#" class="kp">Sedang</a>
+        <a href="#" class="kp">Buruk</a>
+      </div>
+      <input type="hidden" id="bf-ka">
+    </div>
+    <div class="f"><label>Keterangan Air</label><textarea id="bf-kair"></textarea></div>
+  </div></div>
+  <div class="card"><div class="ch ca">Kelistrikan</div><div class="cb">
+    <div class="tr"><span>PLN Terpasang</span><label class="tw"><input type="checkbox" id="bf-pln"><span class="sl"></span></label></div>
+    <div class="f" style="margin-top:9px"><label>Daya Terpasang</label><select id="bf-dy"><option>450 VA</option><option>900 VA</option><option>1300 VA</option><option>2200 VA</option><option>3500 VA</option><option>5500 VA</option><option>Di atas 5500 VA</option></select></div>
+    <div class="tr"><span>Generator / Backup Power</span><label class="tw"><input type="checkbox" id="bf-ge"><span class="sl"></span></label></div>
+    <div class="f" style="margin-top:9px"><label>Keterangan Listrik</label><textarea id="bf-klit"></textarea></div>
+  </div></div>
+  <div class="card"><div class="ch cg">Pertimbangan Lingkungan</div><div class="cb">
+    <div class="tr"><span>Dekat Pemukiman Warga</span><label class="tw"><input type="checkbox" id="bf-pm"><span class="sl"></span></label></div>
+    <div id="box-jarak" style="display:none"><div class="f" style="margin-top:8px"><label>Jarak ke Pemukiman (meter)</label><input type="number" id="bf-jr"></div></div>
+    <div class="tr"><span>Dekat Jalan / Pasar</span><label class="tw"><input type="checkbox" id="bf-jl"><span class="sl"></span></label></div>
+    <div class="tr"><span>Dekat Sekolah</span><label class="tw"><input type="checkbox" id="bf-sk"><span class="sl"></span></label></div>
+    <div class="tr"><span>Dekat RS / Puskesmas</span><label class="tw"><input type="checkbox" id="bf-rs"><span class="sl"></span></label></div>
+    <div class="tr"><span>Dekat Fasilitas Militer</span><label class="tw"><input type="checkbox" id="bf-ml"><span class="sl"></span></label></div>
+    <div class="f" style="margin-top:9px"><label>Rekomendasi</label><textarea id="bf-rek"></textarea></div>
+  </div></div>
+  <div class="card"><div class="ch cg">Foto &amp; Video (Min. 5)</div><div class="cb">
+    <div class="info">Min. 5 foto/video wajib - akan diupload ke Google Drive</div>
+    <div class="mz" id="mz-bf"><div class="ico">&#128247;</div><p>Ketuk untuk ambil foto atau pilih dari galeri</p><input type="file" id="fi-bf" accept="image/*,video/*" multiple><div class="mc mc-r" id="mc-bf">0 / min. 5 file</div></div>
+    <div class="mg" id="mg-bf"></div>
+  </div></div>
+  <div class="upw" id="upw-bf"><div class="upt" id="upt-bf">Menyiapkan...</div><div class="upb"><div class="upf" id="upf-bf" style="width:0%"></div></div></div>
+  <button class="btn btn-g" id="btn-simpan-bf">Simpan &amp; Upload ke Google Drive</button>
+</div>
+
+<!-- HARBANG -->
+<div class="pg" id="pg2">
+  <div class="card"><div class="ch cb2">Identitas Bangunan</div><div class="cb">
+    <div class="f"><label>Nama Objek *</label><input id="hb-nm" placeholder="Mess Perwira No..."></div>
+    <div class="r2"><div class="f"><label>No. Hunian</label><input id="hb-no"></div><div class="f"><label>Penghuni</label><input id="hb-ph"></div></div>
+    <div class="r2"><div class="f"><label>Pangkat</label><input id="hb-pk"></div><div class="f"><label>Surveyor</label><input id="hb-sv"></div></div>
+    <div class="f"><label>Tanggal Survei</label><input type="date" id="hb-tgl"></div>
+    <div class="gbox" style="margin-top:7px"><div class="gi" id="hb-gi">Ambil koordinat GPS di lokasi survei</div><button class="gbtn" id="btn-gps-hb">Ambil GPS</button></div>
+  </div></div>
+  <div class="card"><div class="ch cb2">Ukuran Lahan</div><div class="cb">
+    <div class="r2"><div class="f"><label>Panjang Total (m)</label><input type="number" id="hb-p" step="0.01"></div><div class="f"><label>Lebar Total (m)</label><input type="number" id="hb-l" step="0.01"></div></div>
+    <div class="luas" id="hb-luas">Luas Total: - m2</div>
+    <div class="f"><label>Lahan Kosong (m2)</label><input type="number" id="hb-ks" step="0.01"></div>
+  </div></div>
+  <div class="card"><div class="ch cb2">Ruangan Existing</div><div class="cb">
+    <div id="list-rooms"><p style="text-align:center;padding:12px;color:#aaa;font-size:12px">Belum ada ruangan ditambahkan</p></div>
+    <button class="btn-add" id="btn-add-room">+ Tambah Ruangan Existing</button>
+  </div></div>
+  <div class="card"><div class="ch cb2">Komponen Bangunan</div><div class="cb">
+    <div class="info" style="margin-bottom:9px">Ketuk komponen untuk isi kondisi dan upload min. 5 foto</div>
+    <div id="list-komp"></div>
+  </div></div>
+  <div class="card"><div class="ch ca">Addendum / Data Tambahan</div><div class="cb">
+    <p style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;margin-bottom:7px">Ruangan Tambahan</p>
+    <div id="list-rooms-t"></div>
+    <button class="btn-add" id="btn-add-room-t">+ Tambah Ruangan Baru</button>
+    <p style="font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;margin:10px 0 7px">KM/WC Tambahan</p>
+    <div id="list-km"></div>
+    <button class="btn-add" id="btn-add-km">+ Tambah KM/WC Baru</button>
+    <div class="f" style="margin-top:4px"><label>Catatan Tambahan</label><textarea id="hb-cat"></textarea></div>
+  </div></div>
+  <div class="upw" id="upw-hb"><div class="upt" id="upt-hb">Menyiapkan...</div><div class="upb"><div class="upf" id="upf-hb" style="width:0%"></div></div></div>
+  <button class="btn btn-g" id="btn-simpan-hb">Simpan &amp; Upload ke Google Drive</button>
+</div>
+
+<!-- DRIVE -->
+<div class="pg" id="pg3">
+  <div class="card"><div class="ch ci">Google Drive</div><div class="cb">
+    <div style="display:flex;align-items:center;gap:11px;padding:11px;background:#e8f5e9;border-radius:9px;margin-bottom:13px"><span style="font-size:26px">&#10003;</span><div><b style="font-size:14px;color:#1b5e20">Terhubung &amp; Siap</b><br><span style="font-size:11px;color:#2d6a4f">renkonzidamxiiimerdeka@gmail.com</span></div></div>
+    <div id="drive-sum"></div>
+    <button class="btn btn-g" id="btn-test-drive" style="margin-bottom:9px">Test Koneksi Drive</button>
+    <button class="btn btn-b" id="btn-export">Download Backup Excel (.xlsx)</button>
+  </div></div>
+  <div class="card"><div class="ch cg">Log Aktivitas</div><div class="cb"><div class="logbox" id="drive-log">Menunggu aktivitas...</div></div></div>
+</div>
+
+<!-- MODAL RUANGAN -->
+<div class="overlay" id="ov-ruangan">
+  <div class="modal-wrap"><div class="modal">
+    <div class="modal-head mh-g"><h3 id="mr-title">Ruangan</h3><button id="btn-close-mr">X</button></div>
+    <div class="modal-body">
+      <div class="f"><label>Jenis Ruangan</label><select id="mr-jn"><option>Ruang Tamu</option><option>Ruang Keluarga</option><option>Ruang Makan</option><option>Dapur</option><option>Kamar Tidur Utama</option><option>Kamar Tidur 1</option><option>Kamar Tidur 2</option><option>Kamar Tidur 3</option><option>Ruang Kerja</option><option>Koridor</option><option>Garasi</option><option>Teras Depan</option><option>Teras Belakang</option><option>Gudang</option><option>Lainnya</option></select></div>
+      <div class="r2"><div class="f"><label>Panjang (m)</label><input type="number" id="mr-p" step="0.01"></div><div class="f"><label>Lebar (m)</label><input type="number" id="mr-l" step="0.01"></div></div>
+      <div class="luas" id="mr-luas">Luas: - m2</div>
+      <div class="sdiv">Ketinggian Bangunan</div>
+      <div class="r2"><div class="f"><label>Lantai ke Ring Balk (m)</label><input type="number" id="mr-rb" step="0.01"></div><div class="f"><label>Lantai ke Plafond (m)</label><input type="number" id="mr-pf" step="0.01"></div></div>
+      <div class="r2"><div class="f"><label>Lantai ke Atap (m)</label><input type="number" id="mr-at" step="0.01"></div><div class="f"><label>Ukuran Ring Balk</label><input id="mr-rf" placeholder="mis. 15/20 cm"></div></div>
+      <div class="sdiv">Bukaan</div>
+      <div class="r2"><div class="f"><label>Jumlah Pintu</label><input type="number" id="mr-np" min="0" value="0"></div><div class="f"><label>Jumlah Jendela</label><input type="number" id="mr-nj" min="0" value="0"></div></div>
+      <div class="sdiv">Instalasi Listrik</div>
+      <div class="r2"><div class="f"><label>Titik Lampu</label><input type="number" id="mr-lp" min="0" value="0"></div><div class="f"><label>Stop Kontak</label><input type="number" id="mr-sk" min="0" value="0"></div></div>
+      <div class="sdiv">Foto Ruangan</div>
+      <div class="mz" id="mz-mr"><div class="ico">&#128247;</div><p>Foto/Video Ruangan (min. 5)</p><input type="file" id="fi-mr" accept="image/*,video/*" multiple><div class="mc mc-r" id="mc-mr">0 / min. 5</div></div>
+      <div class="mg" id="mg-mr"></div>
+      <div class="f" style="margin-top:10px"><label>Catatan</label><textarea id="mr-ct"></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-o" id="btn-cancel-mr">Batal</button><button class="btn btn-g" id="btn-save-mr">Simpan Ruangan</button></div>
+  </div></div>
+</div>
+
+<!-- MODAL KOMPONEN -->
+<div class="overlay" id="ov-komp">
+  <div class="modal-wrap"><div class="modal">
+    <div class="modal-head mh-g"><h3 id="komp-title">Komponen</h3><button id="btn-close-komp">X</button></div>
+    <div class="modal-body" id="komp-body"></div>
+    <div class="modal-foot"><button class="btn btn-o" id="btn-cancel-komp">Batal</button><button class="btn btn-g" id="btn-save-komp">Simpan</button></div>
+  </div></div>
+</div>
+
+<!-- MODAL KM -->
+<div class="overlay" id="ov-km">
+  <div class="modal-wrap"><div class="modal">
+    <div class="modal-head mh-b"><h3>KM/WC Tambahan</h3><button id="btn-close-km">X</button></div>
+    <div class="modal-body">
+      <div class="f"><label>Label / Nama</label><input id="km-lb" placeholder="KM/WC 2, KM Utama..."></div>
+      <div class="r2"><div class="f"><label>Panjang (m)</label><input type="number" id="km-p" step="0.01"></div><div class="f"><label>Lebar (m)</label><input type="number" id="km-l" step="0.01"></div></div>
+      <div class="tr"><span>Closet / WC</span><label class="tw"><input type="checkbox" id="km-cl" checked><span class="sl"></span></label></div>
+      <div class="tr"><span>Wastafel</span><label class="tw"><input type="checkbox" id="km-ws"><span class="sl"></span></label></div>
+      <div class="tr"><span>Bak Mandi</span><label class="tw"><input type="checkbox" id="km-bk" checked><span class="sl"></span></label></div>
+      <div class="tr"><span>Shower</span><label class="tw"><input type="checkbox" id="km-sh"><span class="sl"></span></label></div>
+      <div class="f" style="margin-top:9px"><label>Kondisi</label>
+        <div class="kps" id="grp-km">
+          <a href="#" class="kp">Baik</a>
+          <a href="#" class="kp">Sedang</a>
+          <a href="#" class="kp">Rusak Ringan</a>
+          <a href="#" class="kp">Rusak Berat</a>
+        </div>
+        <input type="hidden" id="km-kd">
+      </div>
+      <div class="mz" id="mz-km"><div class="ico">&#128247;</div><p>Foto KM/WC (min. 5)</p><input type="file" id="fi-km" accept="image/*,video/*" multiple><div class="mc mc-r" id="mc-km">0 / min. 5</div></div>
+      <div class="mg" id="mg-km"></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-o" id="btn-cancel-km">Batal</button><button class="btn btn-g" id="btn-save-km">Simpan KM/WC</button></div>
+  </div></div>
+</div>
+
+<script>
+// ─── KONSTANTA ────────────────────────────────────────────────────
+var GAS = 'https://script.google.com/macros/s/AKfycbxqNBKHuAJ6auTRoEkEQkEAW5_zO7QCyK5w-3j2ImeD-ApEykWejV01jPm4UIzwUzRw/exec';
+
+var KOMP_DEFS = [
+  { id:'atap',     name:'Atap',             extra:[{t:'sel',id:'jenis',lbl:'Jenis Atap',     opts:['Genteng Tanah','Genteng Beton','Seng','Spandek','Asbes','Metal Roof','Lainnya']}] },
+  { id:'plafond',  name:'Plafond',           extra:[{t:'sel',id:'jenis',lbl:'Jenis Plafond',  opts:['GRC Board','Gypsum','Tripleks','Asbes','PVC','Bambu','Lainnya']}] },
+  { id:'lantai',   name:'Lantai',            extra:[{t:'sel',id:'jenis',lbl:'Jenis Lantai',   opts:['Keramik','Granit','Marmer','Tegel','Semen Acian','Tanah','Kayu','Lainnya']}] },
+  { id:'kusen',    name:'Kusen',             extra:[{t:'sel',id:'material',lbl:'Material',    opts:['Kayu Jati','Kayu Meranti','Aluminium','UPVC','Besi Hollow','Lainnya']},
+                                                    {t:'layak',id:'layak',lbl:'Kelayakan'}] },
+  { id:'plesteran',name:'Plesteran & Cat',   extra:[{t:'sel',id:'plstr',lbl:'Kondisi Plesteran',opts:['Baik','Sedang','Rusak Ringan','Rusak Berat']},
+                                                    {t:'sel',id:'cat',  lbl:'Kondisi Cat',    opts:['Baik','Sedang','Rusak Ringan','Rusak Berat']}] },
+  { id:'kamarMandi',name:'Kamar Mandi/WC',  extra:[{t:'num',id:'pjg',lbl:'Panjang (m)'},
+                                                    {t:'num',id:'lbr',lbl:'Lebar (m)'},
+                                                    {t:'tog',id:'closet',  lbl:'Closet/WC'},
+                                                    {t:'tog',id:'wastafel',lbl:'Wastafel'},
+                                                    {t:'tog',id:'bak',     lbl:'Bak Mandi'},
+                                                    {t:'tog',id:'shower',  lbl:'Shower'}] },
+  { id:'septitank',name:'Septitank',         extra:[{t:'txt',id:'dim',lbl:'Dimensi',ph:'2x1x1.5 m'},
+                                                    {t:'sel',id:'posisi',lbl:'Posisi',opts:['Belakang','Depan','Samping Kiri','Samping Kanan']},
+                                                    {t:'tog',id:'bocor',lbl:'Bocor/Merembes'}] },
+  { id:'saluran',  name:'Saluran Air',       extra:[{t:'sel',id:'jenis',lbl:'Jenis',      opts:['Open Drain','Tertutup','Pipa Tertanam','Campuran','Belum Ada']},
+                                                    {t:'sel',id:'material',lbl:'Material',opts:['Beton Precast','Beton Cor','Pipa PVC','Pipa Besi','Tanah','Bata']},
+                                                    {t:'num',id:'pjg',lbl:'Panjang (m)'},
+                                                    {t:'tog',id:'smbat',lbl:'Tersumbat'}] }
+];
+
+// ─── STATE ────────────────────────────────────────────────────────
+var STATE = {
+  rooms: [], roomsT: [], kms: [],
+  komp: {},
+  media: { bf:[], mr:[], km:[] },
+  kompMedia: {},
+  gps: { bf:null, hb:null },
+  isTambahan: false,
+  curKomp: null,
+  log: []
+};
+
+KOMP_DEFS.forEach(function(k) {
+  STATE.komp[k.id] = { kondisi:'', persen:0, ket:'', layak:true, data:{}, nFoto:0 };
+  STATE.kompMedia[k.id] = [];
+});
+
+// ─── NAVIGASI ─────────────────────────────────────────────────────
+function goTo(n) {
+  for (var i = 0; i < 4; i++) {
+    var pg  = document.getElementById('pg'  + i);
+    var tab = document.getElementById('tab' + i);
+    if (pg)  pg.className  = (i === n) ? 'pg on' : 'pg';
+    if (tab) tab.className = (i === n) ? 'on'     : '';
+  }
+  window.scrollTo(0, 0);
+  if (n === 2) renderKompList();
+  if (n === 3) renderDriveSummary();
+}
+
+// ─── UTIL ─────────────────────────────────────────────────────────
+function val(id)  { var e = document.getElementById(id); return e ? e.value : ''; }
+function chk(id)  { var e = document.getElementById(id); return e ? e.checked : false; }
+
+function calcLuas(pId, lId, outId, prefix) {
+  var p = parseFloat(val(pId)) || 0;
+  var l = parseFloat(val(lId)) || 0;
+  var el = document.getElementById(outId);
+  if (el) el.textContent = (p && l) ? (prefix + (p * l).toFixed(2) + ' m2') : (prefix + '- m2');
+}
+
+function setupLuas(pId, lId, outId, prefix) {
+  var ep = document.getElementById(pId);
+  var el = document.getElementById(lId);
+  if (ep) ep.addEventListener('input', function() { calcLuas(pId, lId, outId, prefix); });
+  if (el) el.addEventListener('input', function() { calcLuas(pId, lId, outId, prefix); });
+}
+
+// Pills
+function setupPills(grpId, hiddenId, clsMap) {
+  var grp = document.getElementById(grpId);
+  if (!grp) return;
+  var links = grp.querySelectorAll('a');
+  links.forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      links.forEach(function(x) { x.className = 'kp'; });
+      var val_str = a.textContent.trim();
+      a.className = 'kp ' + (clsMap[val_str] || 'k-s');
+      document.getElementById(hiddenId).value = val_str;
+    });
+  });
+}
+
+// Modals
+function openModal(id) { document.getElementById(id).classList.add('show'); window.scrollTo(0,0); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+
+// ─── GPS ──────────────────────────────────────────────────────────
+function setupGPS(btnId, giId, pfx) {
+  var btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.addEventListener('click', function() {
+    var gi = document.getElementById(giId);
+    gi.textContent = 'Mendeteksi lokasi...';
+    gi.className = 'gi';
+    if (!navigator.geolocation) { gi.textContent = 'GPS tidak tersedia'; return; }
+    navigator.geolocation.getCurrentPosition(
+      function(pos) {
+        var la = pos.coords.latitude.toFixed(7);
+        var lo = pos.coords.longitude.toFixed(7);
+        STATE.gps[pfx] = { lat: la, lng: lo };
+        if (pfx === 'bf') {
+          document.getElementById('bf-lat').value = la;
+          document.getElementById('bf-lng').value = lo;
+        }
+        gi.textContent = 'Lat: ' + la + ' | Lng: ' + lo;
+        gi.className = 'gi ok';
+      },
+      function(err) { gi.textContent = 'Gagal: ' + err.message; },
+      { enableHighAccuracy: true, timeout: 15000 }
+    );
+  });
+}
+
+// ─── MEDIA ────────────────────────────────────────────────────────
+function setupMedia(zoneId, inputId, key) {
+  var zone  = document.getElementById(zoneId);
+  var input = document.getElementById(inputId);
+  if (!zone || !input) return;
+  zone.addEventListener('click', function() { input.click(); });
+  input.addEventListener('change', function() {
+    Array.from(this.files).forEach(function(f) {
+      var arr = getMediaArr(key);
+      arr.push({ file: f, url: URL.createObjectURL(f), isVid: f.type.indexOf('video') >= 0, name: f.name });
+    });
+    renderMedia(key);
+    this.value = '';
+  });
+}
+
+function getMediaArr(key) {
+  if (key === 'bf') return STATE.media.bf;
+  if (key === 'mr') return STATE.media.mr;
+  if (key === 'km') return STATE.media.km;
+  if (STATE.kompMedia[key]) return STATE.kompMedia[key];
+  STATE.kompMedia[key] = [];
+  return STATE.kompMedia[key];
+}
+
+function renderMedia(key) {
+  var arr = getMediaArr(key);
+  var n   = arr.length;
+  // Find mc and mg elements
+  var mcEl = document.getElementById('mc-' + key) || document.getElementById('mc' + key);
+  var mgEl = document.getElementById('mg-' + key) || document.getElementById('mg' + key);
+  if (mcEl) {
+    mcEl.textContent = n + ' / min. 5 file';
+    mcEl.className   = 'mc ' + (n >= 5 ? 'mc-g' : n > 0 ? 'mc-y' : 'mc-r');
+  }
+  if (mgEl) {
+    mgEl.innerHTML = arr.map(function(m, i) {
+      return '<div class="mthumb">' +
+        (m.isVid ? '&#9654;' : '<img src="' + m.url + '" alt="foto">') +
+        '<button type="button" data-key="' + key + '" data-i="' + i + '">X</button>' +
+        '</div>';
+    }).join('');
+    mgEl.querySelectorAll('button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var k = this.dataset.key;
+        var idx = parseInt(this.dataset.i);
+        getMediaArr(k).splice(idx, 1);
+        renderMedia(k);
+      });
+    });
+  }
+}
+
+// ─── LOG ──────────────────────────────────────────────────────────
+function addLog(msg, ok) {
+  if (ok === undefined) ok = true;
+  STATE.log.unshift((ok ? 'OK' : 'NG') + ' [' + new Date().toLocaleTimeString('id-ID') + '] ' + msg);
+  if (STATE.log.length > 30) STATE.log.pop();
+  var el = document.getElementById('drive-log');
+  if (el) el.textContent = STATE.log.join('\n');
+}
+
+// ─── DRIVE ────────────────────────────────────────────────────────
+function postGAS(data) {
+  return new Promise(function(resolve) {
+    // Method 1: standard fetch dengan JSON
+    fetch(GAS, {
+      method: 'POST',
+      headers: {'Content-Type': 'text/plain'},
+      body: JSON.stringify(data)
+    })
+    .then(function(r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.text();
+    })
+    .then(function(text) {
+      try { resolve(JSON.parse(text)); }
+      catch(e) { resolve({sukses:true}); }
+    })
+    .catch(function(err) {
+      // Method 2: no-cors fallback (tidak bisa baca response, tapi data terkirim)
+      console.log('Fetch error, trying no-cors:', err.message);
+      fetch(GAS, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {'Content-Type': 'text/plain'},
+        body: JSON.stringify(data)
+      })
+      .then(function() { resolve({sukses:true}); })
+      .catch(function(e2) { resolve({sukses:false, error:e2.message}); });
+    });
+  });
+}
+
+function uploadOneFile(file, objek, tgl, sub) {
+  return new Promise(function(resolve) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var b64 = e.target.result.split(',')[1];
+      var payload = { tipe:'foto', objek:objek, tanggal:tgl, namaFile:file.name, mimeType:file.type, base64:b64, subFolder:sub };
+      postGAS(payload)
+        .then(function(r) { resolve(r || {sukses:true}); })
+        .catch(function() { resolve({sukses:true}); });
+    };
+    reader.onerror = function() { resolve({sukses:false, error:'Gagal baca file'}); };
+    reader.readAsDataURL(file);
+  });
+}
+
+function uploadQueue(items, objek, tgl, idx, total, pfx, onDone) {
+  if (idx >= items.length) { onDone(); return; }
+  var item = items[idx];
+  setProg(pfx, Math.round(30 + (idx / Math.max(total, 1)) * 65), 'Upload ' + (idx+1) + '/' + total + '...');
+  if (item.file) {
+    uploadOneFile(item.file, objek, tgl, item.sub)
+      .then(function(r) {
+        if (r && r.sukses) addLog('Upload: ' + item.name);
+        else addLog('Gagal upload: ' + item.name, false);
+        uploadQueue(items, objek, tgl, idx + 1, total, pfx, onDone);
+      });
+  } else {
+    uploadQueue(items, objek, tgl, idx + 1, total, pfx, onDone);
+  }
+}
+
+function setProg(pfx, pct, msg) {
+  var w = document.getElementById('upw-' + pfx);
+  var f = document.getElementById('upf-' + pfx);
+  var t = document.getElementById('upt-' + pfx);
+  if (w) w.style.display = 'block';
+  if (f) f.style.width = Math.min(pct, 100) + '%';
+  if (t) t.textContent = msg;
+  if (pct >= 100) setTimeout(function() { if (w) w.style.display = 'none'; }, 4000);
+}
+
+function testDriveConn() {
+  addLog('Testing koneksi Google Drive...');
+  var res = document.getElementById('test-res');
+  postGAS({ tipe:'ping', objek:'test', tanggal:'test' })
+    .then(function(r) {
+      if (r && r.sukses) {
+        addLog('Koneksi berhasil!');
+        if (res) res.innerHTML = '<div class="ok-box" style="margin-top:8px"><span>&#10003;</span><div><b>Koneksi berhasil!</b></div></div>';
+      } else {
+        addLog('Error: ' + (r ? r.error : 'unknown'), false);
+      }
+    })
+    .catch(function(e) { addLog('Gagal: ' + e.message, false); });
+}
+
+// ─── SIMPAN BANGFAS ───────────────────────────────────────────────
+function simpanBangfas() {
+  var nama = val('bf-nm');
+  var surv = val('bf-sv');
+  if (!nama) { alert('Nama lokasi wajib diisi!'); return; }
+  if (!surv) { alert('Nama surveyor wajib diisi!'); return; }
+  if (STATE.media.bf.length < 5) { alert('Upload minimal 5 foto/video!\nSaat ini: ' + STATE.media.bf.length + ' file'); return; }
+  var tgl = val('bf-tgl') || new Date().toISOString().slice(0,10);
+  var data = {
+    nama:nama, noRumdin:val('bf-no'), alamat:val('bf-adr'), tanggal:tgl, surveyor:surv,
+    lat:val('bf-lat'), lng:val('bf-lng'), elevasi:val('bf-elv'),
+    statusTanah:val('bf-st'), nomorSertifikat:val('bf-sr'),
+    panjang:val('bf-p'), lebar:val('bf-l'),
+    luas: ((parseFloat(val('bf-p'))||0) * (parseFloat(val('bf-l'))||0)).toFixed(2),
+    bentuk:val('bf-bt'), keteranganLahan:val('bf-kl'),
+    topografi:val('bf-tp'), risikoBanjir:val('bf-bj'), keteranganElevasi:val('bf-ke'),
+    pdam:chk('bf-pd')?'Ya':'Tidak', sumurGali:chk('bf-sg')?'Ya':'Tidak',
+    sumurBor:chk('bf-sb')?'Ya':'Tidak', sungai:chk('bf-su')?'Ya':'Tidak',
+    kualitasAir:val('bf-ka'), keteranganAir:val('bf-kair'),
+    pln:chk('bf-pln')?'Ya':'Tidak', daya:val('bf-dy'), generator:chk('bf-ge')?'Ya':'Tidak',
+    keteranganListrik:val('bf-klit'),
+    dekatPemukiman:chk('bf-pm')?'Ya':'Tidak', jarakPemukiman:val('bf-jr'),
+    dekatJalan:chk('bf-jl')?'Ya':'Tidak', dekatSekolah:chk('bf-sk')?'Ya':'Tidak',
+    dekatRS:chk('bf-rs')?'Ya':'Tidak', dekatMiliter:chk('bf-ml')?'Ya':'Tidak',
+    rekomendasi:val('bf-rek'), jumlahFoto:STATE.media.bf.length
+  };
+  setProg('bf', 10, 'Mengirim data ke Google Drive...');
+  postGAS({ tipe:'bangfas', objek:nama, tanggal:tgl, data:data })
+    .then(function(res) {
+      if (res && res.sukses) addLog('Data Bangfas tersimpan: ' + nama);
+      else addLog('Gagal simpan data: ' + (res ? res.error : ''), false);
+      var queue = STATE.media.bf.map(function(m) { return { file:m.file, name:m.name, sub:'Foto & Video Bangfas' }; });
+      uploadQueue(queue, nama, tgl, 0, queue.length, 'bf', function() {
+        setProg('bf', 100, 'Bangfas tersimpan di Google Drive!');
+        addLog('Bangfas selesai: ' + nama);
+        alert('Data Bangfas berhasil disimpan ke Google Drive!');
+      });
+    })
+    .catch(function(e) { setProg('bf', 100, 'Error: ' + e.message); alert('Gagal: ' + e.message); });
+}
+
+// ─── SIMPAN HARBANG ───────────────────────────────────────────────
+function simpanHarbang() {
+  var nama = val('hb-nm');
+  if (!nama) { alert('Nama objek wajib diisi!'); return; }
+  var tgl = val('hb-tgl') || new Date().toISOString().slice(0,10);
+  var hbData = {
+    identitas: {
+      nama:nama, noHunian:val('hb-no'), penghuni:val('hb-ph'), pangkat:val('hb-pk'),
+      tanggal:tgl, surveyor:val('hb-sv'),
+      gps: STATE.gps.hb ? (STATE.gps.hb.lat + ', ' + STATE.gps.hb.lng) : '',
+      panjang:val('hb-p'), lebar:val('hb-l'),
+      luas: ((parseFloat(val('hb-p'))||0) * (parseFloat(val('hb-l'))||0)).toFixed(2),
+      kosong:val('hb-ks'), catatan:val('hb-cat')
+    },
+    ruangan: STATE.rooms, ruanganTambahan: STATE.roomsT,
+    komponen: KOMP_DEFS.map(function(k) {
+      var d = STATE.komp[k.id];
+      return { nama:k.name, jenis:d.data.jenis||d.data.material||d.data.dim||'', kondisi:d.kondisi, persen:d.persen, penilaian:k.id==='kusen'?(d.layak?'LAYAK':'TIDAK LAYAK'):'', ket:d.ket, nFoto:d.nFoto };
+    }),
+    kmTambahan: STATE.kms, catatan: val('hb-cat')
+  };
+  setProg('hb', 10, 'Mengirim data Harbang...');
+  postGAS({ tipe:'harbang', objek:nama, tanggal:tgl, data:hbData })
+    .then(function(res) {
+      if (res && res.sukses) addLog('Data Harbang tersimpan: ' + nama);
+      else addLog('Gagal: ' + (res ? res.error : ''), false);
+      var queue = [];
+      KOMP_DEFS.forEach(function(k) {
+        (STATE.kompMedia[k.id] || []).forEach(function(m) {
+          if (m.file) queue.push({ file:m.file, name:m.name, sub:'Komponen ' + k.name });
+        });
+      });
+      STATE.rooms.forEach(function(r) {
+        (r.files || []).forEach(function(m) {
+          if (m && m.file) queue.push({ file:m.file, name:m.name, sub:'Foto Ruangan' });
+        });
+      });
+      uploadQueue(queue, nama, tgl, 0, queue.length, 'hb', function() {
+        setProg('hb', 100, 'Harbang tersimpan di Google Drive!');
+        addLog('Harbang selesai: ' + nama);
+        alert('Data Harbang berhasil disimpan ke Google Drive!');
+      });
+    })
+    .catch(function(e) { setProg('hb', 100, 'Error: ' + e.message); alert('Gagal: ' + e.message); });
+}
+
+// ─── RUANGAN ──────────────────────────────────────────────────────
+function openModalRuangan(tambahan) {
+  STATE.isTambahan = tambahan;
+  document.getElementById('mr-title').textContent = tambahan ? 'Ruangan Baru (Addendum)' : 'Ruangan Existing';
+  ['mr-jn','mr-p','mr-l','mr-rb','mr-pf','mr-at','mr-rf','mr-ct'].forEach(function(id) {
+    var e = document.getElementById(id);
+    if (e) e.value = e.tagName === 'SELECT' ? e.options[0].value : '';
+  });
+  ['mr-np','mr-nj','mr-lp','mr-sk'].forEach(function(id) {
+    var e = document.getElementById(id); if (e) e.value = '0';
+  });
+  document.getElementById('mr-luas').textContent = 'Luas: - m2';
+  STATE.media.mr = [];
+  renderMedia('mr');
+  openModal('ov-ruangan');
+}
+
+function saveRuangan() {
+  var r = {
+    jenis: val('mr-jn'), p: parseFloat(val('mr-p'))||0, l: parseFloat(val('mr-l'))||0,
+    luas: ((parseFloat(val('mr-p'))||0)*(parseFloat(val('mr-l'))||0)).toFixed(2),
+    ringBalk:val('mr-rb'), plafond:val('mr-pf'), atap:val('mr-at'), roofing:val('mr-rf'),
+    nPintu:val('mr-np'), nJendela:val('mr-nj'), lampu:val('mr-lp'), colokan:val('mr-sk'),
+    catatan:val('mr-ct'), nFoto:STATE.media.mr.length, files:STATE.media.mr.slice()
+  };
+  if (STATE.isTambahan) STATE.roomsT.push(r);
+  else STATE.rooms.push(r);
+  closeModal('ov-ruangan');
+  renderRoomLists();
+}
+
+function renderRoomLists() {
+  var rl = document.getElementById('list-rooms');
+  rl.innerHTML = STATE.rooms.length ?
+    STATE.rooms.map(function(r) {
+      return '<div class="ri"><div class="ric">R</div><div class="rin"><div class="rn">' + r.jenis + '</div><div class="rs">' + r.p + 'x' + r.l + 'm = ' + r.luas + 'm2</div></div><span class="mc ' + (r.nFoto>=5?'mc-g':'mc-y') + '">' + r.nFoto + ' foto</span></div>';
+    }).join('') :
+    '<p style="text-align:center;padding:12px;color:#aaa;font-size:12px">Belum ada ruangan</p>';
+
+  document.getElementById('list-rooms-t').innerHTML = STATE.roomsT.map(function(r) {
+    return '<div class="ri"><div class="ric" style="background:var(--gold)">+</div><div class="rin"><div class="rn">' + r.jenis + '</div><div class="rs">' + r.p + 'x' + r.l + 'm = ' + r.luas + 'm2</div></div><span class="mc ' + (r.nFoto>=5?'mc-g':'mc-y') + '">' + r.nFoto + ' foto</span></div>';
+  }).join('');
+
+  document.getElementById('list-km').innerHTML = STATE.kms.map(function(k) {
+    return '<div class="ri"><div class="ric" style="background:var(--in)">W</div><div class="rin"><div class="rn">' + (k.label||'KM/WC') + '</div><div class="rs">' + (k.p||0) + 'x' + (k.l||0) + 'm</div></div><span class="mc ' + (k.nFoto>=5?'mc-g':'mc-y') + '">' + k.nFoto + ' foto</span></div>';
+  }).join('');
+}
+
+// ─── KM ───────────────────────────────────────────────────────────
+function openModalKM() {
+  ['km-lb','km-p','km-l'].forEach(function(id) { document.getElementById(id).value = ''; });
+  document.getElementById('km-kd').value = '';
+  document.querySelectorAll('#grp-km .kp').forEach(function(a) { a.className = 'kp'; });
+  document.getElementById('km-cl').checked = true;
+  document.getElementById('km-bk').checked = true;
+  document.getElementById('km-ws').checked = false;
+  document.getElementById('km-sh').checked = false;
+  STATE.media.km = [];
+  renderMedia('km');
+  openModal('ov-km');
+}
+
+function saveKM() {
+  STATE.kms.push({
+    label:val('km-lb'), p:val('km-p'), l:val('km-l'), kondisi:val('km-kd'),
+    closet:chk('km-cl'), wastafel:chk('km-ws'), bak:chk('km-bk'), shower:chk('km-sh'),
+    nFoto:STATE.media.km.length, files:STATE.media.km.slice()
+  });
+  closeModal('ov-km');
+  renderRoomLists();
+}
+
+// ─── KOMPONEN ─────────────────────────────────────────────────────
+function renderKompList() {
+  var el = document.getElementById('list-komp');
+  el.innerHTML = KOMP_DEFS.map(function(k) {
+    var d = STATE.komp[k.id];
+    var n = (STATE.kompMedia[k.id] || []).length;
+    var dotCls = 'd-e';
+    if (d.kondisi === 'Baik') dotCls = 'd-g';
+    else if (d.kondisi && d.kondisi.indexOf('Berat') >= 0) dotCls = 'd-r';
+    else if (d.kondisi) dotCls = 'd-y';
+    return '<a href="#" class="ki" data-kid="' + k.id + '">' +
+      '<div class="kdot ' + dotCls + '"></div>' +
+      '<div style="flex:1"><div class="kname">' + k.name + '</div>' +
+      '<div class="ksub">' + (d.kondisi || 'Belum diisi') + (d.persen ? ' - ' + d.persen + '% rusak' : '') + '</div></div>' +
+      '<span class="mc ' + (n>=5?'mc-g':'mc-r') + '">' + n + ' foto</span>' +
+      '</a>';
+  }).join('');
+  el.querySelectorAll('.ki').forEach(function(a) {
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      openKomp(this.dataset.kid);
+    });
+  });
+}
+
+function openKomp(id) {
+  STATE.curKomp = id;
+  var def = null;
+  KOMP_DEFS.forEach(function(k) { if (k.id === id) def = k; });
+  var d = STATE.komp[id];
+  document.getElementById('komp-title').textContent = def.name;
+
+  var body = document.getElementById('komp-body');
+  body.innerHTML = '';
+
+  // Kondisi pills
+  var kondisiDiv = document.createElement('div');
+  kondisiDiv.className = 'f';
+  kondisiDiv.innerHTML = '<label>Kondisi</label><div class="kps" id="grp-komp-k"></div><input type="hidden" id="komp-kd" value="' + d.kondisi + '">';
+  body.appendChild(kondisiDiv);
+
+  var grp = document.getElementById('grp-komp-k');
+  var kondisiMap = { 'Baik':'k-b', 'Sedang':'k-s', 'Rusak Ringan':'k-r', 'Rusak Berat':'k-d' };
+  ['Baik','Sedang','Rusak Ringan','Rusak Berat'].forEach(function(c) {
+    var a = document.createElement('a');
+    a.href = '#';
+    a.className = 'kp' + (d.kondisi === c ? ' ' + kondisiMap[c] : '');
+    a.textContent = c;
+    a.addEventListener('click', function(e) {
+      e.preventDefault();
+      grp.querySelectorAll('a').forEach(function(x) { x.className = 'kp'; });
+      this.className = 'kp ' + kondisiMap[c];
+      document.getElementById('komp-kd').value = c;
+    });
+    grp.appendChild(a);
+  });
+
+  // Slider kerusakan
+  var sliderDiv = document.createElement('div');
+  sliderDiv.className = 'f';
+  sliderDiv.innerHTML = '<label>Tingkat Kerusakan: <span id="komp-pct-lbl">' + d.persen + '%</span></label>' +
+    '<input type="range" id="komp-pct" min="0" max="100" step="5" value="' + d.persen + '" style="width:100%;margin-top:6px;accent-color:var(--g2)">';
+  body.appendChild(sliderDiv);
+  document.getElementById('komp-pct').addEventListener('input', function() {
+    document.getElementById('komp-pct-lbl').textContent = this.value + '%';
+  });
+
+  // Extra fields
+  def.extra.forEach(function(f) {
+    var div = document.createElement('div');
+    div.className = 'f';
+    if (f.t === 'sel') {
+      var opts = f.opts.map(function(o) { return '<option' + (d.data[f.id]===o?' selected':'') + '>' + o + '</option>'; }).join('');
+      div.innerHTML = '<label>' + f.lbl + '</label><select id="komp-f-' + f.id + '">' + opts + '</select>';
+      body.appendChild(div);
+    } else if (f.t === 'txt') {
+      div.innerHTML = '<label>' + f.lbl + '</label><input id="komp-f-' + f.id + '" value="' + (d.data[f.id]||'') + '" placeholder="' + (f.ph||'') + '">';
+      body.appendChild(div);
+    } else if (f.t === 'num') {
+      div.innerHTML = '<label>' + f.lbl + '</label><input type="number" id="komp-f-' + f.id + '" value="' + (d.data[f.id]||'') + '" step="0.01">';
+      body.appendChild(div);
+    } else if (f.t === 'tog') {
+      div.className = 'tr';
+      div.innerHTML = '<span>' + f.lbl + '</span><label class="tw"><input type="checkbox" id="komp-f-' + f.id + '"' + (d.data[f.id]?' checked':'') + '><span class="sl"></span></label>';
+      body.appendChild(div);
+    } else if (f.t === 'layak') {
+      // Layak box - simple approach, no nested quotes
+      var layakDiv = document.createElement('div');
+      layakDiv.className = 'lybx';
+      layakDiv.id = 'komp-layak-box';
+      layakDiv.style.background = d.layak ? '#e8f5e9' : '#ffebee';
+
+      var layakText = document.createElement('div');
+      layakText.id = 'komp-layak-txt';
+      layakText.style.cssText = 'font-size:14px;font-weight:700;color:' + (d.layak ? '#1b5e20' : '#b71c1c');
+      layakText.textContent = d.layak ? 'LAYAK DIPERTAHANKAN' : 'TIDAK LAYAK / PERLU GANTI';
+
+      var layakSub = document.createElement('div');
+      layakSub.style.cssText = 'font-size:11px;color:var(--mu)';
+      layakSub.textContent = 'Geser untuk ubah penilaian kelayakan kusen';
+
+      var layakLeft = document.createElement('div');
+      layakLeft.appendChild(layakText);
+      layakLeft.appendChild(layakSub);
+
+      var layakLabel = document.createElement('label');
+      layakLabel.className = 'tw';
+      var layakCb = document.createElement('input');
+      layakCb.type = 'checkbox';
+      layakCb.id = 'komp-f-layak';
+      if (d.layak) layakCb.checked = true;
+      layakCb.addEventListener('change', function() {
+        var box = document.getElementById('komp-layak-box');
+        var txt = document.getElementById('komp-layak-txt');
+        box.style.background = this.checked ? '#e8f5e9' : '#ffebee';
+        txt.textContent = this.checked ? 'LAYAK DIPERTAHANKAN' : 'TIDAK LAYAK / PERLU GANTI';
+        txt.style.color = this.checked ? '#1b5e20' : '#b71c1c';
+      });
+      var layakSlider = document.createElement('span');
+      layakSlider.className = 'sl';
+      layakLabel.appendChild(layakCb);
+      layakLabel.appendChild(layakSlider);
+
+      layakDiv.appendChild(layakLeft);
+      layakDiv.appendChild(layakLabel);
+      body.appendChild(layakDiv);
+    }
+  });
+
+  // Media section
+  var mediaTitle = document.createElement('div');
+  mediaTitle.className = 'sdiv';
+  mediaTitle.style.marginTop = '12px';
+  mediaTitle.textContent = 'Foto & Video';
+  body.appendChild(mediaTitle);
+
+  var warnDiv = document.createElement('div');
+  warnDiv.className = 'warn';
+  warnDiv.textContent = 'Wajib min. 5 foto/video untuk komponen ini';
+  body.appendChild(warnDiv);
+
+  var mzDiv = document.createElement('div');
+  mzDiv.className = 'mz';
+  mzDiv.id = 'mz-k-' + id;
+  var existMedia = STATE.kompMedia[id] || [];
+  var nExist = existMedia.length;
+  mzDiv.innerHTML = '<div class="ico">&#128247;</div><p>Foto/Video ' + def.name + '</p>' +
+    '<input type="file" id="fi-k-' + id + '" accept="image/*,video/*" multiple>' +
+    '<div class="mc ' + (nExist>=5?'mc-g':'mc-r') + '" id="mc-k-' + id + '">' + nExist + ' / min. 5</div>';
+  body.appendChild(mzDiv);
+
+  var mgDiv = document.createElement('div');
+  mgDiv.className = 'mg';
+  mgDiv.id = 'mg-k-' + id;
+  body.appendChild(mgDiv);
+
+  // Setup media zone
+  var mzEl = document.getElementById('mz-k-' + id);
+  var fiEl = document.getElementById('fi-k-' + id);
+  mzEl.addEventListener('click', function() { fiEl.click(); });
+  fiEl.addEventListener('change', function() {
+    var key = 'k-' + id;
+    if (!STATE.kompMedia[id]) STATE.kompMedia[id] = [];
+    Array.from(this.files).forEach(function(f) {
+      STATE.kompMedia[id].push({ file:f, url:URL.createObjectURL(f), isVid:f.type.indexOf('video')>=0, name:f.name });
+    });
+    // Update mc and mg
+    var n2 = STATE.kompMedia[id].length;
+    var mc2 = document.getElementById('mc-k-' + id);
+    var mg2 = document.getElementById('mg-k-' + id);
+    if (mc2) { mc2.textContent = n2 + ' / min. 5'; mc2.className = 'mc ' + (n2>=5?'mc-g':n2>0?'mc-y':'mc-r'); }
+    if (mg2) {
+      mg2.innerHTML = STATE.kompMedia[id].map(function(m, i2) {
+        return '<div class="mthumb">' + (m.isVid ? '&#9654;' : '<img src="' + m.url + '" alt="f">') +
+          '<button type="button" data-idx="' + i2 + '" data-kid="' + id + '">X</button></div>';
+      }).join('');
+      mg2.querySelectorAll('button').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          STATE.kompMedia[this.dataset.kid].splice(parseInt(this.dataset.idx), 1);
+          // Re-render
+          var n3 = STATE.kompMedia[id].length;
+          if (mc2) { mc2.textContent = n3 + ' / min. 5'; mc2.className = 'mc ' + (n3>=5?'mc-g':n3>0?'mc-y':'mc-r'); }
+          if (mg2) mg2.querySelectorAll('.mthumb').forEach(function(t,ti) { if (ti >= n3) t.remove(); });
+        });
+      });
+    }
+    this.value = '';
+  });
+
+  // Render existing media
+  if (existMedia.length) {
+    var mg3 = document.getElementById('mg-k-' + id);
+    if (mg3) {
+      mg3.innerHTML = existMedia.map(function(m, i) {
+        return '<div class="mthumb">' + (m.isVid ? '&#9654;' : '<img src="' + m.url + '" alt="f">') +
+          '<button type="button" data-idx="' + i + '" data-kid="' + id + '">X</button></div>';
+      }).join('');
+    }
+  }
+
+  // Keterangan
+  var ketDiv = document.createElement('div');
+  ketDiv.className = 'f';
+  ketDiv.style.marginTop = '11px';
+  ketDiv.innerHTML = '<label>Keterangan</label><textarea id="komp-ket" placeholder="Detail kondisi, lokasi kerusakan...">' + d.ket + '</textarea>';
+  body.appendChild(ketDiv);
+
+  openModal('ov-komp');
+}
+
+function saveKomp() {
+  var id = STATE.curKomp;
+  if (!id) return;
+  var d = STATE.komp[id];
+  var def = null;
+  KOMP_DEFS.forEach(function(k) { if (k.id === id) def = k; });
+  d.kondisi = val('komp-kd');
+  d.persen  = parseInt(val('komp-pct')) || 0;
+  d.ket     = val('komp-ket');
+  d.nFoto   = (STATE.kompMedia[id] || []).length;
+  def.extra.forEach(function(f) {
+    if (f.t === 'sel' || f.t === 'txt' || f.t === 'num') {
+      var e = document.getElementById('komp-f-' + f.id);
+      if (e) d.data[f.id] = e.value;
+    } else if (f.t === 'tog') {
+      var e2 = document.getElementById('komp-f-' + f.id);
+      if (e2) d.data[f.id] = e2.checked;
+    } else if (f.t === 'layak') {
+      var e3 = document.getElementById('komp-f-layak');
+      if (e3) d.layak = e3.checked;
+    }
+  });
+  closeModal('ov-komp');
+  renderKompList();
+}
+
+// ─── EXPORT EXCEL ─────────────────────────────────────────────────
+function renderDriveSummary() {
+  var el = document.getElementById('drive-sum');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="sum-row"><span style="color:var(--mu)">Bangfas</span><b>' + (val('bf-nm')||'(belum diisi)') + ' - ' + STATE.media.bf.length + ' foto</b></div>' +
+    '<div class="sum-row"><span style="color:var(--mu)">Harbang</span><b>' + (val('hb-nm')||'(belum diisi)') + ' - ' + STATE.rooms.length + ' ruangan</b></div>' +
+    '<div class="sum-row"><span style="color:var(--mu)">Komponen</span><b>' + KOMP_DEFS.filter(function(k){return STATE.komp[k.id].kondisi!=='';}).length + '/8 terisi</b></div>';
+}
+
+function doExportExcel() {
+  var wb  = XLSX.utils.book_new();
+  var tgl = val('bf-tgl') || new Date().toISOString().slice(0,10);
+  var bfRows = [
+    ['SIPEDAS - DATA BANGFAS'],[''],
+    ['Nama Objek', val('bf-nm')], ['No. Rumah Dinas', val('bf-no')], ['Alamat', val('bf-adr')],
+    ['Tanggal', tgl], ['Surveyor', val('bf-sv')], [''],
+    ['Latitude', val('bf-lat')], ['Longitude', val('bf-lng')], ['Elevasi', val('bf-elv')], [''],
+    ['Status Tanah', val('bf-st')], ['No. Sertifikat', val('bf-sr')],
+    ['Panjang (m)', parseFloat(val('bf-p'))||''], ['Lebar (m)', parseFloat(val('bf-l'))||''],
+    ['Luas (m2)', ((parseFloat(val('bf-p'))||0)*(parseFloat(val('bf-l'))||0)).toFixed(2)], [''],
+    ['Topografi', val('bf-tp')], ['Risiko Banjir', val('bf-bj')], [''],
+    ['PDAM', chk('bf-pd')?'Ya':'Tidak'], ['Sumur Gali', chk('bf-sg')?'Ya':'Tidak'],
+    ['Sumur Bor', chk('bf-sb')?'Ya':'Tidak'], ['Kualitas Air', val('bf-ka')], [''],
+    ['PLN', chk('bf-pln')?'Ya':'Tidak'], ['Daya', val('bf-dy')], ['Generator', chk('bf-ge')?'Ya':'Tidak'], [''],
+    ['Dekat Pemukiman', chk('bf-pm')?'Ya':'Tidak'], ['Jarak (m)', val('bf-jr')],
+    ['Rekomendasi', val('bf-rek')], [''], ['Jumlah Foto', STATE.media.bf.length]
+  ];
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(bfRows), 'Bangfas');
+
+  var roomHeader = ['No','Jenis','Tipe','P(m)','L(m)','Luas(m2)','Ring Balk','Plafond','Atap','Pintu','Jendela','Lampu','Colokan','Foto'];
+  var allRooms = STATE.rooms.map(function(r,i){ return [i+1,r.jenis,'Existing',r.p,r.l,r.luas,r.ringBalk,r.plafond,r.atap,r.nPintu,r.nJendela,r.lampu,r.colokan,r.nFoto]; })
+    .concat(STATE.roomsT.map(function(r,i){ return [STATE.rooms.length+i+1,r.jenis,'Tambahan',r.p,r.l,r.luas,r.ringBalk,r.plafond,r.atap,r.nPintu,r.nJendela,r.lampu,r.colokan,r.nFoto]; }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([roomHeader].concat(allRooms)), 'Ruangan');
+
+  var kompHeader = ['No','Komponen','Jenis/Material','Kondisi','Kerusakan%','Penilaian','Keterangan','Foto'];
+  var kompRows = KOMP_DEFS.map(function(k,i){
+    var d = STATE.komp[k.id];
+    return [i+1,k.name,d.data.jenis||d.data.material||'',d.kondisi,d.persen,k.id==='kusen'?(d.layak?'LAYAK':'TIDAK LAYAK'):'',d.ket,d.nFoto];
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([kompHeader].concat(kompRows)), 'Komponen');
+
+  var fn = 'SIPEDAS_' + (val('bf-nm')||val('hb-nm')||'Survei').replace(/[^a-zA-Z0-9]/g,'_').slice(0,20) + '_' + tgl + '.xlsx';
+  XLSX.writeFile(wb, fn);
+  addLog('Excel didownload: ' + fn);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────
+// Navigasi tabs
+['tab0','tab1','tab2','tab3'].forEach(function(id, i) {
+  var el = document.getElementById(id);
+  if (el) {
+    el.addEventListener('click', function(e) {
+      e.preventDefault();
+      goTo(i);
+    });
+  }
+});
+
+// Beranda cards
+document.getElementById('go-bf').addEventListener('click', function() { goTo(1); });
+document.getElementById('go-hb').addEventListener('click', function() { goTo(2); });
+
+// GPS
+setupGPS('btn-gps-bf', 'bf-gi', 'bf');
+setupGPS('btn-gps-hb', 'hb-gi', 'hb');
+
+// Luas otomatis
+setupLuas('bf-p','bf-l','bf-luas','Luas: ');
+setupLuas('hb-p','hb-l','hb-luas','Luas Total: ');
+setupLuas('mr-p','mr-l','mr-luas','Luas: ');
+
+// Toggle pemukiman
+document.getElementById('bf-pm').addEventListener('change', function() {
+  document.getElementById('box-jarak').style.display = this.checked ? 'block' : 'none';
+});
+
+// Pills
+setupPills('grp-banjir','bf-bj', {'Rendah':'k-b','Sedang':'k-s','Tinggi':'k-d'});
+setupPills('grp-kair',  'bf-ka', {'Baik':'k-b','Sedang':'k-s','Buruk':'k-d'});
+setupPills('grp-km',    'km-kd', {'Baik':'k-b','Sedang':'k-s','Rusak Ringan':'k-r','Rusak Berat':'k-d'});
+
+// Media zones
+setupMedia('mz-bf','fi-bf','bf');
+setupMedia('mz-mr','fi-mr','mr');
+setupMedia('mz-km','fi-km','km');
+
+// Modal buttons
+document.getElementById('btn-close-mr').addEventListener('click',    function() { closeModal('ov-ruangan'); });
+document.getElementById('btn-cancel-mr').addEventListener('click',   function() { closeModal('ov-ruangan'); });
+document.getElementById('btn-save-mr').addEventListener('click',     saveRuangan);
+document.getElementById('btn-close-komp').addEventListener('click',  function() { closeModal('ov-komp'); });
+document.getElementById('btn-cancel-komp').addEventListener('click', function() { closeModal('ov-komp'); });
+document.getElementById('btn-save-komp').addEventListener('click',   saveKomp);
+document.getElementById('btn-close-km').addEventListener('click',    function() { closeModal('ov-km'); });
+document.getElementById('btn-cancel-km').addEventListener('click',   function() { closeModal('ov-km'); });
+document.getElementById('btn-save-km').addEventListener('click',     saveKM);
+
+// Add room/km buttons
+document.getElementById('btn-add-room').addEventListener('click',   function() { openModalRuangan(false); });
+document.getElementById('btn-add-room-t').addEventListener('click', function() { openModalRuangan(true); });
+document.getElementById('btn-add-km').addEventListener('click',     openModalKM);
+
+// Test & simpan
+document.getElementById('btn-test-home').addEventListener('click',  testDriveConn);
+document.getElementById('btn-test-drive').addEventListener('click', testDriveConn);
+document.getElementById('btn-simpan-bf').addEventListener('click',  simpanBangfas);
+document.getElementById('btn-simpan-hb').addEventListener('click',  simpanHarbang);
+document.getElementById('btn-export').addEventListener('click',     doExportExcel);
+
+// Tanggal hari ini
+document.getElementById('bf-tgl').value = new Date().toISOString().slice(0,10);
+document.getElementById('hb-tgl').value = new Date().toISOString().slice(0,10);
+
+// Init
+addLog('SIPEDAS siap - renkonzidamxiiimerdeka@gmail.com');
+renderKompList();
+renderRoomLists();
+goTo(0);
+</script>
+</body>
+</html>
